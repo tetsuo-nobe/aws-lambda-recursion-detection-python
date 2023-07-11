@@ -1,0 +1,11 @@
+version = 0.1
+[devserverless]
+[devserverless.deploy]
+[devserverless.deploy.parameters]
+stack_name = "aws-lambda-recursion-detection-python"
+resolve_s3 = true
+s3_prefix = "aws-lambda-recursion-detection-python"
+region = "ap-northeast-1"
+profile = "devserverless"
+capabilities = "CAPABILITY_IAM"
+image_repositories = []

@@ -1,0 +1,75 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  aws-lambda-recursion-detection-python
+
+  Sample SAM Template for aws-lambda-recursion-detection-python
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 10
+    MemorySize: 128
+
+    Tracing: Active
+  Api:
+    TracingEnabled: true
+Resources:
+  SqsSourceQueue:
+    Type: AWS::SQS::Queue
+    Properties: 
+      QueueName: demo-recursion-detection-source-queue
+      RedrivePolicy: 
+        deadLetterTargetArn: 
+          Fn::GetAtt: 
+            - "SqsDLQ"
+            - "Arn"
+        maxReceiveCount: 5
+  SqsTargetQueue:
+    Type: AWS::SQS::Queue
+    Properties: 
+        QueueName: demo-recursion-detection-target-queue
+  SqsDLQ:
+    Type: AWS::SQS::Queue
+    Properties: 
+        QueueName: demo-recursion-detection-deadletter-queue
+  SendMessageFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: send_message_function/
+      FunctionName: demo-recursion-detection-python
+      Handler: app.lambda_handler
+      Runtime: python3.8
+      Architectures:
+      - x86_64
+      Environment:
+        Variables:
+          SOURCE_QUEUE_URL: !Ref SqsSourceQueue          
+          TARGET_QUEUE_URL: !Ref SqsSourceQueue ### Configuration ERROR to demonstrate recursion
+      Policies:
+        - SQSSendMessagePolicy:
+            QueueName: !GetAtt SqsSourceQueue.QueueName
+        - SQSSendMessagePolicy:
+            QueueName: !GetAtt SqsTargetQueue.QueueName
+      Events:
+        MySQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt SqsSourceQueue.Arn
+            BatchSize: 1
+Outputs:
+  SendMessageFunction:
+    Description: "SendMessageFunction ARN"
+    Value: !GetAtt SendMessageFunction.Arn
+  SourceSQSqueueName:
+    Description: Source SQS queue
+    Value: !GetAtt SqsSourceQueue.QueueName
+  SourceSQSqueueURL:
+    Description: Source SQS queue URL
+    Value: !Ref SqsSourceQueue
+  TargetSQSqueueName:
+    Description: Target SQS queue
+    Value: !GetAtt SqsTargetQueue.QueueName
+  TargetSQSqueueURL:
+    Description: Target SQS queue URL
+    Value: !Ref SqsTargetQueue
