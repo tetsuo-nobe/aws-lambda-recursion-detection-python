@@ -1,7 +1,7 @@
 # AWS Lambda の再帰呼出し検知のサンプル (Python 版)
 
-* [Document URL](https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/invocation-recursion.html)
-* [Blog URL](https://aws.amazon.com/jp/blogs/compute/detecting-and-stopping-recursive-loops-in-aws-lambda-functions/)
+* [AWS Document](https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/invocation-recursion.html)
+* [AWS Blog](https://aws.amazon.com/jp/blogs/compute/detecting-and-stopping-recursive-loops-in-aws-lambda-functions/)
 * [Java のサンプル](https://github.com/aws-samples/aws-lambda-recursion-detection-sample)
 
 ---
