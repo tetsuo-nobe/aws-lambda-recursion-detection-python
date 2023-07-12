@@ -19,15 +19,18 @@
     - **Outputs** セクションに表示される **Key** が **SourceSQSqueueURL** の値をメモしておく
   - Amazon SQS キューにメッセージを送信する
     - 下記の  <SOURCE_QUEUE_URL> をメモしておいた **SourceSQSqueueURL** の値に置き換えて実行する。
-  - 再帰呼出し検知を確認する
-    - Lambda 関数 `demo-recursion-detection-python` の CloudWatch Logs を参照して、16 回呼び出されていることを確認する
-      - 検索で `START` を指定するとわかりやすい
-    - SQS キュー `demo-recursion-detection-deadletter-queue` に送信したメッセージが格納されていることを確認する 
 
       ```
       aws sqs send-message --queue-url <SOURCE_QUEUE_URL>  --message-body '{\"orderId\":"1",\"productName\":\"Bolt\",\"orderStatus\":\"Submitted\"}' --profile devserverless
 
       ```
+
+  - 再帰呼出し検知を確認する
+    - Lambda 関数 `demo-recursion-detection-python` の CloudWatch Logs を参照して、16 回呼び出されていることを確認する
+      - 検索で `START` を指定するとわかりやすい
+    - SQS キュー `demo-recursion-detection-deadletter-queue` に送信したメッセージが格納されていることを確認する 
+
+
 ---
 ### 参考情報
 
